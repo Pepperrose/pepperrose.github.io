@@ -1849,7 +1849,7 @@ img:hover {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #f4ff3b;
+  background: #ff88e2;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -2974,4 +2974,31 @@ ul.breadcrumb li+li:last-child {
   .post-body {
     text-align: justify;
   }
+}
+.category-list {
+  width: 1000px;
+}
+.category-list-item {
+  position: relative;
+  float: left;
+  padding-top: 53px;
+  margin: 18px;
+  list-style: none;
+  width: 21%;
+  height: 110px;
+  border: 1px solid #d8d8d8;
+  font-size: 25px;
+  font-weight: bold;
+  color: #fff;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 0 5px 10px #ccc;
+}
+.category-list-item:hover {
+  top: -5px;
+  -webkit-transform: scale(1.01);
+  -moz-transform: scale(1.01);
+  -ms-transform: scale(1.01);
+  -o-transform: scale(1.01);
+  transform: scale(1.01);
 }

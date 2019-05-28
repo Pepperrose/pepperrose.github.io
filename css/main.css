@@ -1849,7 +1849,7 @@ img:hover {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #ff88e2;
+  background: #47c3ff;
 }
 .links-of-blogroll {
   font-size: 13px;
@@ -3001,4 +3001,7 @@ ul.breadcrumb li+li:last-child {
   -ms-transform: scale(1.01);
   -o-transform: scale(1.01);
   transform: scale(1.01);
+}
+.mermaid {
+  background: transparent;
 }

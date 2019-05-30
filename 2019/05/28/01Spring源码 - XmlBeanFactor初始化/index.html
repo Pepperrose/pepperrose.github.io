@@ -111,15 +111,15 @@
   <meta name="description" content="背景 作为一个 Java 程序员 ，使用了几年的 Spring 框架了，也只是停留在会使用 Spring 框架的层面，由于要经常和 Spring 框架打交道，学习下 Spring 底层的原理还是很有必要的。  我们从最基本容器使用开始，一步一步学习每一个步骤的作用，达到了什么效果，Let’s go ~123456789101112//定义一个Beanpublic class User &amp;#123;">
 <meta name="keywords" content="Java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="XmlBeanFactor初始化">
-<meta property="og:url" content="http://yoursite.com/2019/05/28/XmlBeanFactor初始化/index.html">
+<meta property="og:title" content="01Spring源码 - XmlBeanFactor初始化">
+<meta property="og:url" content="http://yoursite.com/2019/05/28/01Spring源码 - XmlBeanFactor初始化/index.html">
 <meta property="og:site_name" content="Java 后端小菜鸟儿">
 <meta property="og:description" content="背景 作为一个 Java 程序员 ，使用了几年的 Spring 框架了，也只是停留在会使用 Spring 框架的层面，由于要经常和 Spring 框架打交道，学习下 Spring 底层的原理还是很有必要的。  我们从最基本容器使用开始，一步一步学习每一个步骤的作用，达到了什么效果，Let’s go ~123456789101112//定义一个Beanpublic class User &amp;#123;">
 <meta property="og:locale" content="zh-CN">
 <meta property="og:image" content="https://i.loli.net/2019/05/28/5ced1492e4fb878951.jpg">
-<meta property="og:updated_time" content="2019-05-28T11:02:19.850Z">
+<meta property="og:updated_time" content="2019-05-30T09:20:11.364Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="XmlBeanFactor初始化">
+<meta name="twitter:title" content="01Spring源码 - XmlBeanFactor初始化">
 <meta name="twitter:description" content="背景 作为一个 Java 程序员 ，使用了几年的 Spring 框架了，也只是停留在会使用 Spring 框架的层面，由于要经常和 Spring 框架打交道，学习下 Spring 底层的原理还是很有必要的。  我们从最基本容器使用开始，一步一步学习每一个步骤的作用，达到了什么效果，Let’s go ~123456789101112//定义一个Beanpublic class User &amp;#123;">
 <meta name="twitter:image" content="https://i.loli.net/2019/05/28/5ced1492e4fb878951.jpg">
 
@@ -128,7 +128,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/05/28/XmlBeanFactor初始化/"/>
+  <link rel="canonical" href="http://yoursite.com/2019/05/28/01Spring源码 - XmlBeanFactor初始化/"/>
 
 
 
@@ -138,7 +138,7 @@
   };
 </script>
 
-  <title>XmlBeanFactor初始化 | Java 后端小菜鸟儿</title>
+  <title>01Spring源码 - XmlBeanFactor初始化 | Java 后端小菜鸟儿</title>
   
 
 
@@ -295,7 +295,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/28/XmlBeanFactor初始化/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/28/01Spring源码 - XmlBeanFactor初始化/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Xiewt">
@@ -312,7 +312,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">XmlBeanFactor初始化
+          <h1 class="post-title" itemprop="name headline">01Spring源码 - XmlBeanFactor初始化
               
             
           </h1>
@@ -337,12 +337,24 @@
                 
               
 
-              <time title="创建时间：2019-05-28 16:52:16 / 修改时间：19:02:19" itemprop="dateCreated datePublished" datetime="2019-05-28T16:52:16+08:00">2019-05-28</time>
+              <time title="创建时间：2019-05-28 16:52:16" itemprop="dateCreated datePublished" datetime="2019-05-28T16:52:16+08:00">2019-05-28</time>
             
 
             
               
 
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-05-30 17:20:11" itemprop="dateModified" datetime="2019-05-30T17:20:11+08:00">2019-05-30</time>
               
             
           </span>
@@ -455,8 +467,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/05/28/getBean-方法详解/" rel="prev" title="getBean()方法详解">
-                getBean()方法详解 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/05/28/02Spring源码 - getBean()方法详解/" rel="prev" title="02Spring源码 - getBean()方法详解">
+                02Spring源码 - getBean()方法详解 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -535,7 +547,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">9</span>
+                    <span class="site-state-item-count">12</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>

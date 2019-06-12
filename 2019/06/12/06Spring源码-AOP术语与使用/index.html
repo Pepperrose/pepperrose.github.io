@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="我们先看 《Spring 揭秘》 中举得一个栗子：贷款业务管理系统，从业务角度来说，该系统提供了贷款申请、用户信息管理、贷款信息管理、贷款发放回收等功能，这些都属于普通的业务需求。通过面向对象的方法，很容易的按照功能进行模块划分。如果我们需要对业务流程进行监控，加入一些日志记录功能；或者，对业务方法执行的权限进行限制等等。而这些则属于系统需求的范畴。若将这些需求以面向对象的方式实现并集成到系统中去">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="06Spring源码-AOP术语与使用">
+<meta property="og:url" content="http://yoursite.com/2019/06/12/06Spring源码-AOP术语与使用/index.html">
+<meta property="og:site_name" content="Java 后端小菜鸟儿">
+<meta property="og:description" content="我们先看 《Spring 揭秘》 中举得一个栗子：贷款业务管理系统，从业务角度来说，该系统提供了贷款申请、用户信息管理、贷款信息管理、贷款发放回收等功能，这些都属于普通的业务需求。通过面向对象的方法，很容易的按照功能进行模块划分。如果我们需要对业务流程进行监控，加入一些日志记录功能；或者，对业务方法执行的权限进行限制等等。而这些则属于系统需求的范畴。若将这些需求以面向对象的方式实现并集成到系统中去">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://i.loli.net/2019/06/09/5cfc63f9b141d61015.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/09/5cfc6914d781578514.png">
+<meta property="og:updated_time" content="2019-06-12T11:33:38.201Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="06Spring源码-AOP术语与使用">
+<meta name="twitter:description" content="我们先看 《Spring 揭秘》 中举得一个栗子：贷款业务管理系统，从业务角度来说，该系统提供了贷款申请、用户信息管理、贷款信息管理、贷款发放回收等功能，这些都属于普通的业务需求。通过面向对象的方法，很容易的按照功能进行模块划分。如果我们需要对业务流程进行监控，加入一些日志记录功能；或者，对业务方法执行的权限进行限制等等。而这些则属于系统需求的范畴。若将这些需求以面向对象的方式实现并集成到系统中去">
+<meta name="twitter:image" content="https://i.loli.net/2019/06/09/5cfc63f9b141d61015.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/06/12/06Spring源码-AOP术语与使用/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>06Spring源码-AOP术语与使用 | Java 后端小菜鸟儿</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Java 后端小菜鸟儿</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">记录下学习笔记及一些感想</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/12/06Spring源码-AOP术语与使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Xiewt">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Java 后端小菜鸟儿">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">06Spring源码-AOP术语与使用
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-12 19:20:32 / 修改时间：19:33:38" itemprop="dateCreated datePublished" datetime="2019-06-12T19:20:32+08:00">2019-06-12</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/Spring-学习/" itemprop="url" rel="index"><span itemprop="name">Spring 学习</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我们先看 <strong>《Spring 揭秘》</strong> 中举得一个栗子：贷款业务管理系统，从业务角度来说，该系统提供了贷款申请、用户信息管理、贷款信息管理、贷款发放回收等功能，这些都属于普通的业务需求。通过面向对象的方法，很容易的按照功能进行模块划分。如果我们需要对业务流程进行监控，加入一些日志记录功能；或者，对业务方法执行的权限进行限制等等。而这些则属于系统需求的范畴。若将这些需求以面向对象的方式实现并集成到系统中去，那系统中所有的业务对象都会遍布着这些需求的实现代码。而且随着业务需求的增多，系统的维护可想而知…</p>
+<p>这时候AOP出场了，AOP即面向切面编程，日志记录这些系统需求会横切到各个业务功能之上。<br><img src="https://i.loli.net/2019/06/09/5cfc63f9b141d61015.png" alt="aop.png"></p>
+<h4 id="AOP相关术语"><a href="#AOP相关术语" class="headerlink" title="AOP相关术语"></a>AOP相关术语</h4><p>我们先回顾下Spring AOP的相关术语</p>
+<ol>
+<li><strong>Joinpoint – 连接点</strong><br> 连接点是在应用执行过程中能够插入切面的一个点。通俗的讲，系统在运行之前，需要知道哪些执行点上可以织入横切操作，而这些执行点就是 Joinpoint 。<br> Joinpoint 可以有很多种类型，如构造方法调用，字段设置及获取，方法执行等，但 Spring AOP 中仅支持方法级别的 joinpoint 。</li>
+<li><p><strong>Pointcut – 切点</strong><br> 切点定义了“何处” 织入横切操作。切点的定义会匹配通知所要织入的一个或多个连接点。我们通常使用明确的类和方法名称，或是利用正则表达式定义所匹配的类和方法名称来指定这些切点。<br> Spring中 <strong><em>org.springframework.aop.Pointcut</em></strong> 接口作为所有 <strong><em>Pointcut</em></strong> 的最顶层抽象。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Pointcut</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 匹配被执行织入操作的对象 */</span></span><br><span class="line">    <span class="function">ClassFilter <span class="title">getClassFilter</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 匹配被执行织入操作的方法 */</span></span><br><span class="line">    <span class="function">MethodMatcher <span class="title">getMethodMatcher</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line"> Pointcut TRUE = TruePointcut.INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> <strong>ClassFilter</strong> 接口的作用是对 Joinpoint 所处的对象进行 Class 级别类型匹配：当织入的目标对象的 Class 类型与 Pointcut 所规定的类型相符是，matches() 方法返回 true 。</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ClassFilter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(Class&lt;?&gt; clazz)</span></span>;</span><br><span class="line"></span><br><span class="line">    ClassFilter TRUE = TrueClassFilter.INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> <strong>MethodMatcher</strong> 接口是方法级别的拦截</p>
+ <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MethodMatcher</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(Method method, Class&lt;?&gt; targetClass)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">isRuntime</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">matches</span><span class="params">(Method method, Class&lt;?&gt; targetClass, Object... args)</span></span>;</span><br><span class="line"></span><br><span class="line">    MethodMatcher TRUE = TrueMethodMatcher.INSTANCE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p> MethodMatcher 通过重载，定义两个 matches() 方法，区别在于，在拦截具体方法时，可以忽略每次方法执行的时候传入参数，也可以检查这些调用参数，强化拦截。<br> MethodMatcher 又可以根据是否检查参数分为 StaticMethodMatcher 和  DynamicMethodMatcher。StaticMethodMatcher 由于不检查参数，那么对于同类型的方法匹配结果可以缓存以提高性能，而 DynamicMethodMatcher 由于每次都需要检查参数，无法缓存匹配结果。</p>
+</li>
+<li><p><strong>Advice – 通知</strong><br> 通知是单一横切专注点逻辑的载体，定义了横切的“什么”操作 和“何时”使用横切操作。<br> 切面可以应用5种类型的通知：<br> 1) 前置通知(Before)： 在目标方法被调用之前调用通知功能<br> 2) 后置通知(After)：在目标方法完成之后调用通知，此时不会关心方法的输出是什么<br> 3) 返回通知(After-returning)：在目标方法成功执行之后调用通知<br> 4) 异常用纸(After-throwing)：在目标方法抛出异常后调用通知<br> 5) 环绕通知(Around)：通知包裹了被通知的方法，在被通知的方法调用之前和之后执行自定义行为</p>
+</li>
+<li><p><strong>Aspect – 切面</strong><br> Aspect 由 Pointcut 和 Advice 组成，它包含了多个 Pointcut 以及横切逻辑的定义。Spring AOP 就是负责实施切面的框架，它将切面所定义的切面逻辑织入到切面所指定的切点中。<br> 1) 如何通过 pointcut 和 advice定位到特定的 joinpoint上<br> 2) 如何在 advice 中编写切面代码 </p>
+</li>
+<li><p><strong>Target – 目标对象</strong><br> 织入 advice 的目标对象</p>
+</li>
+<li><strong>Weaving – 织入</strong><br> 将 Aspect 和其他目标对象连接起来，并创建 Adviced object 的过程<br> 根据不同的实现技术，AOP 织入有三种方式：<br> 1) 编译器织入，这种要求有特殊的 Java 编译器；<br> 2) 类装载器织入，这需要有特殊的类装载器；<br> 3) 动态代理织入，在运行期为目标类添加增强 (Advice) 生成子类的方式。Spring 采用动态代理织入，而 AspectJ 采用编译器织入和类装载器织入。</li>
+</ol>
+<p>用一张图形象的理解 Spring AOP<br><img src="https://i.loli.net/2019/06/09/5cfc6914d781578514.png" alt="aop1.png">  </p>
+<h4 id="AOP栗子"><a href="#AOP栗子" class="headerlink" title="AOP栗子"></a>AOP栗子</h4><p>在了解完 AOP 相关术语之后，我们就来看如何使用 AOP ， 配置 AOP 有两种方式，一种是使用自带的<strong>Spring AOP</strong> ；另一种是使用 <strong>AspectJ</strong>。<br>我们先定义业务方法：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**贷款管理*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">LoanManageService</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">add</span><span class="params">(Loan loan)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">Loan <span class="title">getOne</span><span class="params">(Integer id)</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">List&lt;Loan&gt; <span class="title">getAll</span><span class="params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">delete</span><span class="params">(Integer id)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span>(<span class="string">"loanManageServiceImpl"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoanManageServiceImpl</span> <span class="keyword">implements</span> <span class="title">LoanManageService</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">(Loan loan)</span></span>&#123;</span><br><span class="line">         System.out.println(<span class="string">"添加贷款成功，loan = "</span> + loan);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Loan <span class="title">getOne</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"查询贷款成功"</span>);</span><br><span class="line">        Loan loan = <span class="keyword">new</span> Loan(<span class="number">66</span> ,<span class="string">"公积金贷款申请001"</span> ,<span class="string">"公积金贷款"</span>);</span><br><span class="line">        <span class="keyword">return</span> loan;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List&lt;Loan&gt; <span class="title">getAll</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"遍历贷款成功"</span>);</span><br><span class="line">        ArrayList&lt;Loan&gt; loans = <span class="keyword">new</span> ArrayList();</span><br><span class="line">        loans.add(<span class="keyword">new</span> Loan(<span class="number">66</span> ,<span class="string">"公积金贷款申请001"</span> ,<span class="string">" 公积金贷款"</span>));</span><br><span class="line">        loans.add(<span class="keyword">new</span> Loan(<span class="number">67</span> ,<span class="string">"公积金贷款申请002"</span> ,<span class="string">"公积金贷款"</span>));</span><br><span class="line">        <span class="keyword">return</span> loans;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">delete</span><span class="params">(Integer id)</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"删除贷款成功"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后我们再来看两种不同的方法分别如何配置：</p>
+<ol>
+<li>Spring AOP 配置<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**定义切面*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoanAspectJ</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"log: 在 add 方法之前执行"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"log: 在 add 方法之前执行"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">"loanApectJ"</span> <span class="attr">class</span>=<span class="string">"com.spring.learn.aop.LoanAspectJ"</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">aop:config</span> <span class="attr">expose-proxy</span>=<span class="string">"true"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">aop:aspect</span> <span class="attr">ref</span>=<span class="string">"loanApectJ"</span> &gt;</span></span><br><span class="line">        <span class="comment">&lt;!--pointcut--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">aop:pointcut</span> <span class="attr">id</span>=<span class="string">"loanPointcut"</span> <span class="attr">expression</span>=<span class="string">"execution(* com.spring.learn.service.LoanManageService.add(..))"</span> /&gt;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">&lt;!--advice--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">aop:before</span> <span class="attr">method</span>=<span class="string">"before"</span> <span class="attr">pointcut-ref</span>=<span class="string">"loanPointcut"</span> /&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">aop:after</span> <span class="attr">method</span>=<span class="string">"after"</span> <span class="attr">pointcut-ref</span>=<span class="string">"loanPointcut"</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">aop:aspect</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">aop:config</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ol start="2">
+<li>AspectJ 配置<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span> <span class="attr">expose-proxy</span>=<span class="string">"true"</span> <span class="attr">proxy-target-class</span>=<span class="string">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>expose-proxy</strong>：是否需要将当前的代理对象使用 ThreadLocal 进行保存。Spring AOP 不会对最外层的 public 方法内部调用的其他方法也进行拦截。expose-proxy 属性就是来解决这个问题的。<br><strong>proxy-target-class</strong> ：是否使用 CGLIB 进行代理，Spring AOP 原理就是使用动态代理技术：JDK 动态代理 和 CGLIB 代理。该属性的默认值为 false，表示 AOP 默认使用 JDK 动态代理。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="meta">@Aspect</span></span><br><span class="line"><span class="comment">/**定义切面*/</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoanAspectJ</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 在方法执行之前执行</span></span><br><span class="line">    <span class="meta">@Before</span>(<span class="string">"execution(* com.spring.learn.service.LoanManageService.add(..))"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">before</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"log: 在 add 方法之前执行"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 在方法执行之后执行</span></span><br><span class="line">    <span class="meta">@After</span>(<span class="string">"execution(* com.spring.learn.service.LoanManageService.add(..))"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">after</span><span class="params">()</span></span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"log: 在 add 方法之后执行"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通知类型：<br><strong>@Before</strong> 前置通知<br><strong>@After</strong> 后置通知： @After() 在 @AfterReturning() 之前执行，与定义顺序无关<br><strong>@AfterReturning</strong> 返回通知<br><strong>@AfterThrowing</strong> 异常通知<br><strong>@Around</strong> 环绕通知<br>匹配指示符：<br><strong><em>execution</em></strong> 指示符，它用来匹配方法执行的连接点。<br><strong><em>within</em></strong> 指示符，用来匹配特定包下的所有类的所有 Joinpoint ，包括子包，注意是所有类，而不是接口。eg. @Pointcut(“within(com.spring.learn.service.impl.*)“)。<br><strong><em>target</em></strong> 指示符，用来匹配一个目标对象。 eg. @Pointcut(“target(com.spring.learn.service.LoanManageService)”)。<br><strong><em>this</em></strong> 指示符，用于匹配当前 AOP 代理对象类型的执行方法。eg. @Pointcut(“this(service.LoanManageService)”)。<br><strong><em>arg</em></strong> 指示符，用于匹配参数。eg. @Before(“execution(* com.spring.learn.service.LoanManageService.getOne(Integer)) &amp;&amp; args(id, ..)”)。    </p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>这一文章主要回顾下 Spring AOP 概念及术语，以及使用方法。我们都知道 Spring AOP 的底层原理是通过动态代理来实现的，所以，在 <strong><a href="https://tt.cybrog.cn/2019/05/31/%E4%BB%A3%E7%90%86%E6%A8%A1%E5%BC%8F/" target="_blank" rel="noopener">代理模式</a></strong> 中详细讲解了动态代理。下一篇文章，我们来分析 AOP 源码。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/31/代理模式/" rel="next" title="代理模式">
+                <i class="fa fa-chevron-left"></i> 代理模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Xiewt" />
+            
+              <p class="site-author-name" itemprop="name">Xiewt</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">14</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#AOP相关术语"><span class="nav-number">1.</span> <span class="nav-text">AOP相关术语</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AOP栗子"><span class="nav-number">2.</span> <span class="nav-text">AOP栗子</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xiewt</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.3.0</div>
+
+
+
+
+
+  <script src='https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js'></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize("");
+    }
+  </script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=6.3.0" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=6.3.0">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=6.3.0">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=6.3.0" color="#222">
+
+
+
+
+
+
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '6.3.0',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: false,
+    fastclick: false,
+    lazyload: false,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+  
+
+
+
+
+  <meta name="description" content="我们先举个生活中的例子来理解下装饰者模式：山东煎饼果子基本款一般只有一个鸡蛋，两三片生菜叶子，一块脆饼，价格一般是5块。如果想吃豪华款，加一份土豆1块，一份鸡肉2.5块，一份火腿3块等等，上不封顶。这就是一个非常典型的装饰者模式的例子。下面我们就来看下观察者模式： 装饰者模式定义定义：装饰者模式动态的将责任附加到对象。如要扩展功能，装饰者提供了比继承更有弹性的替代方案。(利用继承设计子类，只能在编">
+<meta name="keywords" content="Java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="装饰者模式">
+<meta property="og:url" content="http://yoursite.com/2019/06/25/装饰者模式/index.html">
+<meta property="og:site_name" content="Java 后端小菜鸟儿">
+<meta property="og:description" content="我们先举个生活中的例子来理解下装饰者模式：山东煎饼果子基本款一般只有一个鸡蛋，两三片生菜叶子，一块脆饼，价格一般是5块。如果想吃豪华款，加一份土豆1块，一份鸡肉2.5块，一份火腿3块等等，上不封顶。这就是一个非常典型的装饰者模式的例子。下面我们就来看下观察者模式： 装饰者模式定义定义：装饰者模式动态的将责任附加到对象。如要扩展功能，装饰者提供了比继承更有弹性的替代方案。(利用继承设计子类，只能在编">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://i.loli.net/2019/06/26/5d12d9026b26f11440.png">
+<meta property="og:image" content="https://i.loli.net/2019/06/26/5d12e02913db820096.png">
+<meta property="og:updated_time" content="2019-06-26T03:13:03.378Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="装饰者模式">
+<meta name="twitter:description" content="我们先举个生活中的例子来理解下装饰者模式：山东煎饼果子基本款一般只有一个鸡蛋，两三片生菜叶子，一块脆饼，价格一般是5块。如果想吃豪华款，加一份土豆1块，一份鸡肉2.5块，一份火腿3块等等，上不封顶。这就是一个非常典型的装饰者模式的例子。下面我们就来看下观察者模式： 装饰者模式定义定义：装饰者模式动态的将责任附加到对象。如要扩展功能，装饰者提供了比继承更有弹性的替代方案。(利用继承设计子类，只能在编">
+<meta name="twitter:image" content="https://i.loli.net/2019/06/26/5d12d9026b26f11440.png">
+
+
+
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/06/25/装饰者模式/"/>
+
+
+
+<script type="text/javascript" id="page.configurations">
+  CONFIG.page = {
+    sidebar: "",
+  };
+</script>
+
+  <title>装饰者模式 | Java 后端小菜鸟儿</title>
+  
+
+
+
+
+
+
+
+
+
+  <noscript>
+  <style type="text/css">
+    .use-motion .motion-element,
+    .use-motion .brand,
+    .use-motion .menu-item,
+    .sidebar-inner,
+    .use-motion .post-block,
+    .use-motion .pagination,
+    .use-motion .comments,
+    .use-motion .post-header,
+    .use-motion .post-body,
+    .use-motion .collection-title { opacity: initial; }
+
+    .use-motion .logo,
+    .use-motion .site-title,
+    .use-motion .site-subtitle {
+      opacity: initial;
+      top: initial;
+    }
+
+    .use-motion {
+      .logo-line-before i { left: initial; }
+      .logo-line-after i { right: initial; }
+    }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Java 后端小菜鸟儿</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+    
+      
+        <p class="site-subtitle">记录下学习笔记及一些感想</p>
+      
+    
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="切换导航栏">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+          
+          <li class="menu-item menu-item-home">
+    <a href="/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-home"></i> <br />首页</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-categories">
+    <a href="/categories/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-th"></i> <br />分类</a>
+  </li>
+        
+        
+        
+          
+          <li class="menu-item menu-item-archives">
+    <a href="/archives/" rel="section">
+      <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />归档</a>
+  </li>
+
+      
+      
+    </ul>
+  
+
+  
+
+  
+</nav>
+
+
+
+  
+
+
+
+</div>
+    </header>
+
+    
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+            
+
+          
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/25/装饰者模式/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Xiewt">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Java 后端小菜鸟儿">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">装饰者模式
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2019-06-25 19:34:44" itemprop="dateCreated datePublished" datetime="2019-06-25T19:34:44+08:00">2019-06-25</time>
+            
+
+            
+              
+
+              
+                
+                <span class="post-meta-divider">|</span>
+                
+
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">更新于</span>
+                
+                <time title="修改时间：2019-06-26 11:13:03" itemprop="dateModified" datetime="2019-06-26T11:13:03+08:00">2019-06-26</time>
+              
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/设计模式/" itemprop="url" rel="index"><span itemprop="name">设计模式</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="post-meta-item-icon"
+            >
+            <i class="fa fa-eye"></i>
+             阅读次数： 
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>我们先举个生活中的例子来理解下<strong>装饰者模式</strong>：山东煎饼果子基本款一般只有一个鸡蛋，两三片生菜叶子，一块脆饼，价格一般是5块。如果想吃豪华款，加一份土豆1块，一份鸡肉2.5块，一份火腿3块等等，上不封顶。这就是一个非常典型的装饰者模式的例子。下面我们就来看下观察者模式：</p>
+<h3 id="装饰者模式定义"><a href="#装饰者模式定义" class="headerlink" title="装饰者模式定义"></a>装饰者模式定义</h3><p><strong>定义</strong>：装饰者模式动态的将责任附加到对象。如要扩展功能，装饰者提供了比继承更有弹性的替代方案。(利用继承设计子类，只能在编译时静态决定，并且所有子类都会继承相同的行为；利用组合的做法扩展对象，就可以在运行时动态的进行扩展。)<br><strong>角色</strong>：装饰者模式由 <strong><em>Component(抽象组件)</em></strong> 、 <strong><em>ConcreteComponent(具体组件)</em></strong> 、 <strong><em>Decorator(抽象装饰类)</em></strong> 、<strong><em>ConcreteDecorator(具体装饰类)</em></strong> 组成。组件即被修饰的对象。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>角色</th>
+<th>类别</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td></td>
+<td>Component</td>
+<td>接口/抽象类</td>
+<td>抽象组件，是具体组件和抽象装饰类的共同父类，声明了具体组件中实现的业务方法</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>ConcreteComponent</td>
+<td>具体组件</td>
+<td>具体组件，是抽象组件的实现类，定义了具体的组件对象。装饰器可给它添加额外的职责。</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Decorator</td>
+<td>接口/抽象类</td>
+<td>抽象装饰类，是抽象组件的子类，用于给具体组件添加职责。注意：继承抽象组件的目的是完成类型匹配，而不是继承其行为</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>ConcreteDecorator</td>
+<td>具体装饰类</td>
+<td>具体装饰类，是抽象装饰类的实现类，用于具体化给组件添加的职责</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>装饰者模式遵循<strong>开放-关闭原则</strong>(类应该对扩展开放，对修改关闭)。</p>
+<p><strong>UML图</strong><br><img src="https://i.loli.net/2019/06/26/5d12d9026b26f11440.png" alt="装饰者模式.png"></p>
+<h3 id="装饰者模式栗子"><a href="#装饰者模式栗子" class="headerlink" title="装饰者模式栗子"></a>装饰者模式栗子</h3><p>就以上面生活中的栗子为背景。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:xiewt</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 抽象组件:煎饼果子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>:Create in 2019-06-25 17:30</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Modify</span> By:</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Cake</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String description = <span class="string">"Unknown Cake"</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> description;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 价格</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:xiewt</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 具体组件：原始煎饼果子</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>:Create in 2019-06-25 19:19</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Modify</span> By:</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OriginalCake</span> <span class="keyword">extends</span> <span class="title">Cake</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">OriginalCake</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        description = <span class="string">"原始煎饼果子包括一个鸡蛋，三片生菜"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">5.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:xiewt</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 抽象装饰者：调料类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>:Create in 2019-06-25 19:20</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Modify</span> By:</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> <span class="title">Condiment</span> <span class="keyword">extends</span> <span class="title">Cake</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> String <span class="title">getDescription</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:xiewt</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 具体装饰者：土豆</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>:Create in 2019-06-25 19:23</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Modify</span> By:</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Potato</span> <span class="keyword">extends</span> <span class="title">Condiment</span> </span>&#123;</span><br><span class="line">    Cake cake;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Potato</span><span class="params">(Cake cake)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.cake = cake;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> cake.getDescription() + <span class="string">"，加入土豆"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> cake.cost() + <span class="number">1.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:xiewt</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 具体装饰者：鸡肉</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>:Create in 2019-06-25 19:25</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Modify</span> By:</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Chicken</span> <span class="keyword">extends</span> <span class="title">Condiment</span> </span>&#123;</span><br><span class="line">    Cake cake;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Chicken</span><span class="params">(Cake cake)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.cake = cake;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> cake.getDescription() + <span class="string">",加入鸡肉"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> cake.cost() + <span class="number">2.5</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:xiewt</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>: 具体装饰者：火腿</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>:Create in 2019-06-25 19:27</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Modify</span> By:</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ham</span> <span class="keyword">extends</span> <span class="title">Condiment</span> </span>&#123;</span><br><span class="line">    Cake cake;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Ham</span><span class="params">(Cake cake)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.cake = cake;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getDescription</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> cake.getDescription() + <span class="string">"，加入火腿"</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">double</span> <span class="title">cost</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> cake.cost() + <span class="number">3.0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Author</span>:xiewt</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Description</span>:客户端</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Date</span>:Create in 2019-06-25 19:29</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Modify</span> By:</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Client</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 原始煎饼果子</span></span><br><span class="line">        Cake cake = <span class="keyword">new</span> OriginalCake();</span><br><span class="line">        System.out.println(cake.getDescription() + <span class="string">" ￥"</span> + cake.cost());</span><br><span class="line"></span><br><span class="line">        Cake cake_super = <span class="keyword">new</span> OriginalCake();</span><br><span class="line">        <span class="comment">//加入土豆</span></span><br><span class="line">        cake_super = <span class="keyword">new</span> Potato(cake_super);</span><br><span class="line">        <span class="comment">//加入火腿</span></span><br><span class="line">        cake_super = <span class="keyword">new</span> Ham(cake_super);</span><br><span class="line">        <span class="comment">//加入鸡肉</span></span><br><span class="line">        cake_super = <span class="keyword">new</span> Chicken(cake_super);</span><br><span class="line">        System.out.println(cake_super.getDescription() + <span class="string">" ￥"</span> + cake_super.cost());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>输出：<br>原始煎饼果子包括一个鸡蛋，三片生菜 ￥5.0<br>原始煎饼果子包括一个鸡蛋，三片生菜，加入土豆，加入火腿,加入鸡肉 ￥11.5</p>
+</blockquote>
+<p>在《Head First 设计模式》一书中，开始是通过继承来实现不同的不同口味的咖啡，这样导致了有多少种口味的咖啡，就会有多少个对应的咖啡实现类。维护会爆炸的！而使用装饰者模式，既可以对弹性的需求进行改变，又可以方便的扩展新的功能。<strong>装饰模式与继承关系的目的都是要扩展对象的功能，但是装饰模式可以提供比继承更多的灵活性。</strong></p>
+<p>###Java I/O中的装饰者模式<br>Java I/O中包含了输入流、输出流、字符流、字节流等等各种各样的流，这么多看似乱七八糟毫无关联的流实际上通过<strong>装饰者模式</strong>整理的有条有理。我们以文件输入流( <strong><em>FileInputStream</em></strong> ) 为例，来看下：<br><strong><em>FileInputStream</em></strong> 提供了最基本的文本文件读取功能，是一个被装饰的组件。<br><strong><em>BufferedInputStream</em></strong> 是一个具体的装饰者，它加入两种职责：利用缓冲区来改进性能；增加读取一行文本输入数据的功能。<br><strong><em>LineNumberInputStream</em></strong> 是一个具体的装饰者，他加入计算行数的职责。<br>如果想要实现一个高效的且具有计算行数功能的文本输入流，则需要使用是这两个装饰者对文件输入流进行一层一层的包裹，进行修饰。</p>
+<p>下图列出了Java中的装饰者类和被装饰者类以及它们之间的关系：<br><img src="https://i.loli.net/2019/06/26/5d12e02913db820096.png" alt="IO.png"></p>
+<p>现在知道了Java I/O 的架构原理了，如果我们想要自定义一个文件输入流是不是就简单啦，自定义一个装饰器，对文件输入流进行包裹即可。<br>但是Java I/O也暴露出装饰者模式的一个缺点：<strong>利用装饰者模式，常常会造成设计中有大量的小类，数量过多，会让程序过于复杂。</strong></p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>1 装饰者模式可以动态的为一个对象增加额外的职责，且通过继承实现更为灵活；<br>2 装饰者和被装饰对象有相同的超类型，且可以用一个或多个装饰者包装一个对象；<br>3 <strong>装饰者可以在所委托被装饰者的行为之前或之后，加上自己的行为，以达到特此那个的目的；</strong><br>4 使用装饰模式进行系统设计时将产生很多小对象，过度使用会让程序变更很复杂。</p>
+
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/24/观察者模式/" rel="next" title="观察者模式">
+                <i class="fa fa-chevron-left"></i> 观察者模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/uploads/avatar.png"
+                alt="Xiewt" />
+            
+              <p class="site-author-name" itemprop="name">Xiewt</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          
+            <nav class="site-state motion-element">
+              
+                <div class="site-state-item site-state-posts">
+                
+                  <a href="/archives/">
+                
+                    <span class="site-state-item-count">17</span>
+                    <span class="site-state-item-name">日志</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-categories">
+                  <a href="/categories/index.html">
+                    
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                      
+                    
+                    <span class="site-state-item-count">5</span>
+                    <span class="site-state-item-name">分类</span>
+                  </a>
+                </div>
+              
+
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
+              
+            </nav>
+          
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+            
+          
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#装饰者模式定义"><span class="nav-number">1.</span> <span class="nav-text">装饰者模式定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#装饰者模式栗子"><span class="nav-number">2.</span> <span class="nav-text">装饰者模式栗子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#总结"><span class="nav-number">3.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Xiewt</span>
+
+  
+
+  
+</div>
+
+
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动 v3.7.1</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://theme-next.org">NexT.Pisces</a> v6.3.0</div>
+
+
+
+
+
+  <script src='https://unpkg.com/mermaid@7.1.2/dist/mermaid.min.js'></script>
+  <script>
+    if (window.mermaid) {
+      mermaid.initialize("");
+    }
+  </script>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv" title="总访客量">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+
+  
+    <span class="site-pv" title="总访问量">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=6.3.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=6.3.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=6.3.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=6.3.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=6.3.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=6.3.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
